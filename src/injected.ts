@@ -577,7 +577,15 @@ const start = async () => {
 
   // Call setupReactiveFeatures immediately and then periodically check for new modules
   setupReactiveFeatures();
-  setInterval(setupReactiveFeatures, 1000); // Check every second for newly loaded modules
+  const interval = setInterval(() => {
+    setupReactiveFeatures();
+
+    const allSetup = Object.values(setupFlags).every(Boolean);
+
+    if (allSetup) {
+      clearInterval(interval);
+    }
+  }, 1000); // Check every second for newly loaded modules
 
   console.log('[Rocket.Chat Desktop] Injected');
 };
